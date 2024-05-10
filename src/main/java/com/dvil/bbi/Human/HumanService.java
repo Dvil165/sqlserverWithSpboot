@@ -1,16 +1,30 @@
 package com.dvil.bbi.Human;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HumanService {
+
+    private final HumanRepository humanRepository;
+
+    @Autowired
+    public HumanService(HumanRepository humanRepository) {
+        this.humanRepository = humanRepository;
+    }
+
     public List<Human> getAllHuman() {
-        return List.of(
-                new Human(1, "Duy", 21, LocalDate.of(2024, Month.MAY, 11), "duy@gmail.com")
-        );
+        return humanRepository.findAll();
+    }
+
+    public void addHuman(Human human) {
+//        System.out.println(human);
+        Optional<Human> humanByEmail = humanRepository.findHumanByEmail(human.getEmail());
+        if (humanByEmail.isPresent()) {
+            throw new IllegalStateException("email already in use");
+        }
+        humanRepository.save(human);
     }
 }

@@ -1,10 +1,27 @@
 package com.dvil.bbi.Human;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.Period;
+
+@Entity
+@Table
 public class Human {
+    @Id
+    @SequenceGenerator(
+            name = "human_seq",
+            sequenceName = "human_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "human_seq"
+    )
+
     private int id;
     private String name;
+    @Transient
     private int age;
     private LocalDate dob;
     private String email;
@@ -12,10 +29,17 @@ public class Human {
     public Human() {
     }
 
-    public Human(int id, String name, int age, LocalDate dob, String email) {
+    public Human(int id, String name, LocalDate dob, String email) {
         this.id = id;
         this.name = name;
-        this.age = age;
+
+        this.dob = dob;
+        this.email = email;
+    }
+
+    public Human(String name, LocalDate dob, String email) {
+        this.name = name;
+
         this.dob = dob;
         this.email = email;
     }
@@ -37,7 +61,7 @@ public class Human {
     }
 
     public int getAge() {
-        return age;
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(int age) {
