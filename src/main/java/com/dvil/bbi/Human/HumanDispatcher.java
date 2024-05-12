@@ -27,4 +27,18 @@ public class HumanDispatcher {
     public void addHuman(@RequestBody Human human){
         humanService.addHuman(human);
     }
+
+    @DeleteMapping(path = "{humanID}")
+    public void deleteHuman(@PathVariable("humanID") int humanID){
+        humanService.deleteHuman(humanID);
+    }
+
+    @PutMapping(path = "{humanID}")
+    public void updateHuman(@PathVariable("humanID") int humanID,
+                            @RequestParam(required = false) String name,
+                            @RequestParam(required = false) String email){
+        humanService.updateHuman(humanID, name, email);
+
+
+    }
 }
